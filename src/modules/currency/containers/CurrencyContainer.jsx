@@ -31,29 +31,24 @@ const CurrencyContainer = () => {
             render: (props, data, index) => index + 1
         },
         {
-            title: t("direction"),
-            dataIndex: "direction",
-            key: "direction",
+            title: t("ID"),
+            dataIndex: "id",
+            key: "id",
         },
         {
-            title: t("nullHandling"),
-            dataIndex: "nullHandling",
-            key: "nullHandling",
+            title: t("Name"),
+            dataIndex: "name",
+            key: "name",
         },
         {
-            title: t("property"),
-            dataIndex: "property",
-            key: "property",
+            title: t("Currency code"),
+            dataIndex: "currencyCode",
+            key: "currencyCode",
         },
         {
-            title: t("ascending"),
-            dataIndex: "ascending",
-            key: "ascending",
-        },
-        {
-            title: t("ignoreCase"),
-            dataIndex: "ignoreCase",
-            key: "ignoreCase",
+            title: t("imageUrl"),
+            dataIndex: "imageUrl",
+            key: "imageUrl",
         },
     ]
     return (
@@ -78,11 +73,12 @@ const CurrencyContainer = () => {
 
                 <Row justify={"end"} style={{marginTop: 10}}>
                     <Pagination
-                        current={page+1}
+                        current={isNaN(page + 1) ? 1 : page + 1}
                         onChange={(page) => setPage(page - 1)}
-                        total={get(data,'data.totalPages') * 10 }
+                        total={isNaN(get(data, 'data.totalPages') * 10) ? 0 : get(data, 'data.totalPages') * 10}
                         showSizeChanger={false}
                     />
+
                 </Row>
             </Space>
         </Container>

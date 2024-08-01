@@ -26,9 +26,19 @@ const RolesContainer = () => {
 
     const columns = [
         {
+            title: "№",
+            key: "index",
+            render: (props, data, index) => index + 1
+        },
+        {
             title: t("ID"),
             dataIndex: "id",
             key: "id",
+        },
+        {
+            title: t("Name"),
+            dataIndex: "name",
+            key: "name",
         },
     ]
     return (
@@ -44,7 +54,7 @@ const RolesContainer = () => {
 
                 <Table
                     columns={columns}
-                    dataSource={get(data,'data.data.content',[])}
+                    dataSource={get(data,'data',[])}
                     bordered
                     size={"middle"}
                     pagination={false}
@@ -53,9 +63,9 @@ const RolesContainer = () => {
 
                 <Row justify={"end"} style={{marginTop: 10}}>
                     <Pagination
-                        current={page+1}
+                        current={isNaN(page + 1) ? 1 : page + 1}
                         onChange={(page) => setPage(page - 1)}
-                        total={get(data,'data.totalPages') * 10 }
+                        total={isNaN(get(data, 'data.totalPages') * 10) ? 0 : get(data, 'data.totalPages') * 10}
                         showSizeChanger={false}
                     />
                 </Row>

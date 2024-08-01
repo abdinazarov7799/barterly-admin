@@ -53,9 +53,9 @@ const RegionContainer = () => {
 
                 <Row justify={"end"} style={{marginTop: 10}}>
                     <Pagination
-                        current={page+1}
+                        current={isNaN(page + 1) ? 1 : page + 1}
                         onChange={(page) => setPage(page - 1)}
-                        total={get(data,'data.totalPages') * 10 }
+                        total={isNaN(get(data, 'data.totalPages') * 10) ? 0 : get(data, 'data.totalPages') * 10}
                         showSizeChanger={false}
                     />
                 </Row>

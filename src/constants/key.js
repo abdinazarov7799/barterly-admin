@@ -1,6 +1,10 @@
 export const KEYS = {
     region_list: "region_list",
     region_get_by_id: "region_get_by_id",
+    cities_list: "cities_list",
+    neighborhood_list: "neighborhood_list",
+    neighborhood_get_by_id: "neighborhood_get_by_id",
+    city_get_by_id: "city_get_by_id",
     currency_list: "currency_list",
     currency_get_by_id: "currency_get_by_id",
     characteristics_list: "characteristics_list",

@@ -16,19 +16,16 @@ NProgress.configure({
 
 const request = axios.create({
   baseURL: config.API_ROOT,
-  params: {
-      'Accept-Language': storage.get("lang") || config.DEFAULT_APP_LANG
-  },
+  params: {},
 });
 
 request.interceptors.request.use(
-  (config) => {
+  (requestConfig) => {
     NProgress.inc();
     const token = get(JSON.parse(storage.get("settings")), "state.token", null);
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+      requestConfig.headers['Accept-Language'] = storage.get("lang") || config.DEFAULT_APP_LANG;
+      if (token) requestConfig.headers.Authorization = `Bearer ${token}`;
+    return requestConfig;
   },
   (error) => {
     NProgress.done(true);

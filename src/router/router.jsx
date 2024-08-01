@@ -31,6 +31,8 @@ import CategoryCharacteristicsPage from "../modules/category-characteristics/pag
 import CategoryCharacteristicsValuePage
   from "../modules/category-characteristics-value/pages/CategoryCharacteristicsValuePage.jsx";
 import RolesPage from "../modules/roles/pages/RolesPage.jsx";
+import CitiesPage from "../modules/cities/pages/CitiesPage.jsx";
+import NeighborhoodPage from "../modules/neighborhood/pages/NeighborhoodPage.jsx";
 // PAGES
 
 
@@ -42,8 +44,16 @@ const Router = () => {
           <Routes>
             <Route path={"/"} element={<DashboardLayout />}>
               <Route
+                  path={"/cities"}
+                  element={<CitiesPage />}
+              />
+              <Route
                   path={"/regions"}
                   element={<RegionPage />}
+              />
+              <Route
+                  path={"/neighborhoods"}
+                  element={<NeighborhoodPage />}
               />
               <Route
                   path={"/currency"}

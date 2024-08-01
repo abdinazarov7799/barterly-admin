@@ -12,8 +12,16 @@ const DashboardSidebar = () => {
 
     const items = [
         {
+            label: t("Cities"),
+            key: "/cities",
+        },
+        {
             label: t("Regions"),
             key: "/regions",
+        },
+        {
+            label: t("Neighborhoods"),
+            key: "/neighborhoods",
         },
         {
             label: t("Currency"),
