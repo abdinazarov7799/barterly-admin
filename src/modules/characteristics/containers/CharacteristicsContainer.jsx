@@ -4,7 +4,7 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {useTranslation} from "react-i18next";
 import Container from "../../../components/Container.jsx";
-import {Input, Pagination, Row, Space, Table} from "antd";
+import {Checkbox, Input, Pagination, Row, Space, Table} from "antd";
 import {get} from "lodash";
 
 const CharacteristicsContainer = () => {
@@ -29,6 +29,32 @@ const CharacteristicsContainer = () => {
             title: "№",
             key: "index",
             render: (props, data, index) => index + 1
+        },
+        {
+            title: t("ID"),
+            key: "id",
+            dataIndex: "id",
+        },
+        {
+            title: t("Name"),
+            key: "name",
+            dataIndex: "name",
+        },
+        {
+            title: t("Category id"),
+            key: "categoryId",
+            dataIndex: "categoryId",
+        },
+        {
+            title: t("Category name"),
+            key: "categoryName",
+            dataIndex: "categoryName",
+        },
+        {
+            title: t("Required"),
+            key: "required",
+            dataIndex: "required",
+            render: (text) => <Checkbox value={text} disabled/>
         },
     ]
     return (

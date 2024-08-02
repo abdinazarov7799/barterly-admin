@@ -2,8 +2,8 @@ import {Menu} from "antd";
 import {get} from "lodash";
 import React from "react";
 import Sider from "antd/es/layout/Sider";
-import {useTranslation} from "react-i18next";
 import {useLocation, useNavigate} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 const DashboardSidebar = () => {
     const { t } = useTranslation();

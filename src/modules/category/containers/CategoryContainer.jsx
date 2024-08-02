@@ -30,7 +30,33 @@ const CategoryContainer = () => {
             key: "index",
             render: (props, data, index) => index + 1
         },
+        {
+            title: t("ID"),
+            key: "id",
+            dataIndex: "id",
+        },
+        {
+            title: t("Name"),
+            key: "name",
+            dataIndex: "name",
+        },
+        {
+            title: t("Parent id"),
+            key: "parentId",
+            dataIndex: "parentId",
+        },
+        {
+            title: t("Parent name"),
+            key: "parentName",
+            dataIndex: "parentName",
+        },
+        {
+            title: t("Image url"),
+            key: "imageUrl",
+            dataIndex: "imageUrl",
+        },
     ]
+
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>

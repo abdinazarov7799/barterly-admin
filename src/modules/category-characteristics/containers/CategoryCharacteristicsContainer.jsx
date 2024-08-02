@@ -30,6 +30,36 @@ const CategoryCharacteristicsContainer = () => {
             key: "index",
             render: (props, data, index) => index + 1
         },
+        {
+            title: t("ID"),
+            key: "id",
+            dataIndex: "id",
+        },
+        {
+            title: t("Name"),
+            key: "name",
+            dataIndex: "name",
+        },
+        {
+            title: t("Category id"),
+            key: "categoryId",
+            dataIndex: "categoryId",
+        },
+        {
+            title: t("Category name"),
+            key: "categoryName",
+            dataIndex: "categoryName",
+        },
+        {
+            title: t("Parent characteristic id"),
+            key: "parentCharacteristicId",
+            dataIndex: "parentCharacteristicId",
+        },
+        {
+            title: t("Parent characteristic name"),
+            key: "parentCharacteristicName",
+            dataIndex: "parentCharacteristicName",
+        },
     ]
     return (
         <Container>

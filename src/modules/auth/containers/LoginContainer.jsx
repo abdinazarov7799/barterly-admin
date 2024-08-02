@@ -19,6 +19,7 @@ const LoginContainer = () => {
   const darkMode = useSettingsStore((state) => get(state, "darkMode"));
   const setToken = useSettingsStore((state) => get(state, "setToken", () => {}));
   const setAuthenticated = useStore((state) => get(state, "setAuthenticated", () => {}));
+  const setRefreshToken = useSettingsStore((state) => get(state, "setRefreshToken", () => {}));
   const navigate = useNavigate();
   const {
     token: { colorBgContainer,borderRadius },
@@ -30,6 +31,7 @@ const LoginContainer = () => {
       {
         onSuccess: ({ data }) => {
           setToken(get(data, "accessToken", null));
+          setRefreshToken(get(data, "refreshToken",null));
           setAuthenticated(true);
           navigate("/auth");
           Swal.fire({

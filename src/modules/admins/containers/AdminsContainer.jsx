@@ -1,16 +1,19 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Input, Pagination, Row, Space, Table} from "antd";
+import {Button, Input, Modal, Pagination, Row, Space, Table} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
+import CreateAdmin from "../components/CreateAdmin.jsx";
+import {PlusOutlined} from "@ant-design/icons";
 
 const AdminsContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(10);
+    const [isModalOpen, setModalOpen] = useState(false);
     const [searchKey,setSearchKey] = useState();
     const {data,isLoading,isFetching} = usePaginateQuery({
         key: KEYS.admin_list,
@@ -54,12 +57,27 @@ const AdminsContainer = () => {
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
+                <Modal
+                    title={t('Create new admin')}
+                    open={isModalOpen}
+                    onCancel={() => setModalOpen(false)}
+                    footer={null}
+                >
+                    <CreateAdmin setIsModalOpen={setModalOpen}/>
+                </Modal>
                 <Space size={"middle"}>
                     <Input.Search
                         placeholder={t("Search")}
                         onChange={(e) => setSearchKey(e.target.value)}
                         allowClear
                     />
+                    <Button
+                        icon={<PlusOutlined />}
+                        type={"primary"}
+                        onClick={() => setModalOpen(true)}
+                    >
+                        {t("New")}
+                    </Button>
                 </Space>
 
                 <Table

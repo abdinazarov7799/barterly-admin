@@ -1,4 +1,4 @@
-import create from 'zustand'
+import { create } from 'zustand'
 import {devtools, persist} from "zustand/middleware";
 import config from "../config";
 import storage from "../services/storage";
@@ -13,9 +13,11 @@ let store = (set) => ({
 
 let settingsStore = (set) => ({
     token: null,
+    refreshToken: null,
     darkMode: storage.get('darkMode') || false,
     lang: storage.get('lang') ||  config.DEFAULT_APP_LANG,
     setToken: (token) => set(state => ({...state, token})),
+    setRefreshToken: (refreshToken) => set(state => ({...state, refreshToken})),
     setLang: (lang) => set(state => ({...state, lang})),
     setDarkMode: () => set(state => ({...state, darkMode: !state.darkMode})),
 })
