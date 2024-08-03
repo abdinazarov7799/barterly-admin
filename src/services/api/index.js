@@ -29,6 +29,9 @@ const refreshToken = async () => {
     const newRefreshToken = response?.data?.refreshToken;
     useSettingsStore.getState().setToken(newToken);
     useSettingsStore.getState().setRefreshToken(newRefreshToken);
+
+    NProgress.done(true);
+
     return newToken;
   } catch (error) {
     console.error("Error refreshing token:", error);

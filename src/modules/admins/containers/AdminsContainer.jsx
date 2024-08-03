@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Input, Modal, Pagination, Row, Space, Table} from "antd";
+import {Button, Input, Modal, Pagination, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
@@ -8,6 +8,7 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import CreateAdmin from "../components/CreateAdmin.jsx";
 import {PlusOutlined} from "@ant-design/icons";
+const { Title } = Typography
 
 const AdminsContainer = () => {
     const {t} = useTranslation();
@@ -57,6 +58,7 @@ const AdminsContainer = () => {
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
+                <Title level={4}>{t("Admins")}</Title>
                 <Modal
                     title={t('Create new admin')}
                     open={isModalOpen}
@@ -68,7 +70,7 @@ const AdminsContainer = () => {
                 <Space size={"middle"}>
                     <Input.Search
                         placeholder={t("Search")}
-                        onChange={(e) => setSearchKey(e.target.value)}
+                        onSearch={(value) => setSearchKey(value)}
                         allowClear
                     />
                     <Button

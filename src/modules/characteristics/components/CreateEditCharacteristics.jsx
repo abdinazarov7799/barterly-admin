@@ -3,38 +3,32 @@ import {useTranslation} from "react-i18next";
 import usePostQuery from "../../../hooks/api/usePostQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
-import {Button, Form, Input, message, Select, Upload} from "antd";
-import ImgCrop from "antd-img-crop";
-import {InboxOutlined} from "@ant-design/icons";
+import {Button, Checkbox, Form, Input, Select} from "antd";
 import {get} from "lodash";
 import usePutQuery from "../../../hooks/api/usePutQuery.js";
-import Resizer from "react-image-file-resizer";
 import useGetOneQuery from "../../../hooks/api/useGetOneQuery.js";
 import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
-const { Dragger } = Upload;
 
 
-const CreateEditCategory = ({id,setIsModalOpen}) => {
+const CreateEditCharacteristics = ({id,setIsModalOpen}) => {
     const { t } = useTranslation();
     const [form] = Form.useForm();
-    const [imageUrl,setImgUrl] = useState('');
+    const [required, setRequired] = useState(false);
 
     const {data} = useGetOneQuery({
         id,
-        key: KEYS.category_get_by_id,
-        url: URLS.category_get_by_id,
+        key: KEYS.characteristics_get_by_id,
+        url: URLS.characteristics_get_by_id,
         enabled: !!id
     })
 
     const { mutate, isLoading } = usePostQuery({
-        listKeyId: KEYS.category_list,
+        listKeyId: KEYS.characteristics_list,
     });
+
     const { mutate:mutateEdit, isLoading:isLoadingEdit } = usePutQuery({
-        listKeyId: KEYS.category_list,
+        listKeyId: KEYS.characteristics_list,
         hideSuccessToast: false
-    });
-    const { mutate:UploadImage } = usePostQuery({
-        hideSuccessToast: true
     });
 
     const {data:categoryList,isLoading:isLoadingCategory} = useGetAllQuery({
@@ -43,19 +37,19 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
     })
 
     useEffect(() => {
+        setRequired(get(data,'data.required',false))
         form.setFieldsValue({
-            parentCategoryId: get(data,'data.parentCategoryId'),
+            categoryId: get(data,'data.categoryId'),
             uz: get(data,'data.translations.uz'),
             ru: get(data,'data.translations.ru'),
             en: get(data,'data.translations.en'),
         });
-        setImgUrl(get(data,'data.imageUrl'));
     }, [data]);
 
     const onFinish = (values) => {
         const formData = {
-            parentCategoryId: get(values,'parentCategoryId'),
-            imageUrl,
+            required,
+            categoryId: get(values,'categoryId'),
             translations: {
                 uz: get(values,'uz'),
                 ru: get(values,'ru'),
@@ -64,7 +58,7 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
         }
         if (id) {
             mutateEdit(
-                { url: `${URLS.category_edit}/${id}`, attributes: formData },
+                { url: `${URLS.category_characteristics_edit}/${id}`, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -73,7 +67,7 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
             );
         }else {
             mutate(
-                { url: URLS.category_add, attributes: formData },
+                { url: URLS.category_characteristics_add, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -81,50 +75,6 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
                 }
             );
         }
-    };
-
-    const resizeFile = (file) => {
-        return new Promise((resolve) => {
-            Resizer.imageFileResizer(
-                file,
-                400,
-                400,
-                "WEBP",
-                60,
-                0,
-                (uri) => {
-                    resolve(uri);
-                },
-                "base64"
-            );
-        })
-    };
-    const beforeUpload = async (file) => {
-        const isLt2M = file.size / 1024 / 1024 < 10;
-        if (!isLt2M) {
-            message.error(t('Image must smaller than 10MB!'));
-            return;
-        }
-        const uri = await resizeFile(file);
-        const resizedImage = await fetch(uri).then(res => res.blob());
-        return new Blob([resizedImage],{ type: "webp"});
-    };
-    const customRequest = async (options) => {
-        const { file, onSuccess, onError } = options;
-        const formData = new FormData();
-        formData.append('file', file);
-        UploadImage(
-            { url: URLS.file_upload, attributes: formData, config: { headers: { 'Content-Type': 'multipart/form-data' } } },
-            {
-                onSuccess: ({ data }) => {
-                    onSuccess(true);
-                    setImgUrl(data);
-                },
-                onError: (err) => {
-                    onError(err);
-                },
-            }
-        );
     };
 
     return (
@@ -136,12 +86,13 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
                 form={form}
             >
                 <Form.Item
-                    label={t("Parent category")}
-                    name="parentCategoryId"
+                    label={t("Category")}
+                    name="categoryId"
+                    rules={[{required: true,}]}
                 >
                     <Select
                         loading={isLoadingCategory}
-                        placeholder={t("Parent category")}
+                        placeholder={t("Category")}
                         options={get(categoryList,'data.content',[])?.map(item => {
                             return {
                                 label: `${get(item,'name')} | ${get(item,'parentName')}`,
@@ -176,20 +127,9 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
                 </Form.Item>
 
                 <Form.Item>
-                    <ImgCrop quality={0.5} aspect={400/400}>
-                        <Dragger
-                            maxCount={1}
-                            multiple={false}
-                            accept={".jpg,.png,jpeg,svg"}
-                            customRequest={customRequest}
-                            beforeUpload={beforeUpload}
-                        >
-                            <p className="ant-upload-drag-icon">
-                                <InboxOutlined />
-                            </p>
-                            <p className="ant-upload-text">{t("Click or drag file to this area to upload")}</p>
-                        </Dragger>
-                    </ImgCrop>
+                    <Checkbox value={required} onChange={(e) => setRequired(e.target.checked)}>
+                        {t("Is required ?")}
+                    </Checkbox>
                 </Form.Item>
 
                 <Form.Item>
@@ -203,4 +143,4 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
 };
 
 
-export default CreateEditCategory;
+export default CreateEditCharacteristics;

@@ -3,48 +3,42 @@ import {useTranslation} from "react-i18next";
 import usePostQuery from "../../../hooks/api/usePostQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
-import {Button, Form, Input, message, Select, Upload} from "antd";
+import {Button, Form, Input, message, Upload} from "antd";
 import ImgCrop from "antd-img-crop";
 import {InboxOutlined} from "@ant-design/icons";
 import {get} from "lodash";
 import usePutQuery from "../../../hooks/api/usePutQuery.js";
 import Resizer from "react-image-file-resizer";
 import useGetOneQuery from "../../../hooks/api/useGetOneQuery.js";
-import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 const { Dragger } = Upload;
 
 
-const CreateEditCategory = ({id,setIsModalOpen}) => {
+const CreateEditCurrency = ({id,setIsModalOpen}) => {
     const { t } = useTranslation();
     const [form] = Form.useForm();
     const [imageUrl,setImgUrl] = useState('');
 
     const {data} = useGetOneQuery({
         id,
-        key: KEYS.category_get_by_id,
-        url: URLS.category_get_by_id,
+        key: KEYS.currency_get_by_id,
+        url: URLS.currency_get_by_id,
         enabled: !!id
     })
 
     const { mutate, isLoading } = usePostQuery({
-        listKeyId: KEYS.category_list,
+        listKeyId: KEYS.currency_list,
     });
     const { mutate:mutateEdit, isLoading:isLoadingEdit } = usePutQuery({
-        listKeyId: KEYS.category_list,
+        listKeyId: KEYS.currency_list,
         hideSuccessToast: false
     });
     const { mutate:UploadImage } = usePostQuery({
         hideSuccessToast: true
     });
 
-    const {data:categoryList,isLoading:isLoadingCategory} = useGetAllQuery({
-        key: KEYS.category_list,
-        url: URLS.category_list,
-    })
-
     useEffect(() => {
         form.setFieldsValue({
-            parentCategoryId: get(data,'data.parentCategoryId'),
+            currencyCode: get(data,'data.currencyCode'),
             uz: get(data,'data.translations.uz'),
             ru: get(data,'data.translations.ru'),
             en: get(data,'data.translations.en'),
@@ -54,7 +48,7 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
 
     const onFinish = (values) => {
         const formData = {
-            parentCategoryId: get(values,'parentCategoryId'),
+            currencyCode: get(values,'currencyCode'),
             imageUrl,
             translations: {
                 uz: get(values,'uz'),
@@ -64,7 +58,7 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
         }
         if (id) {
             mutateEdit(
-                { url: `${URLS.category_edit}/${id}`, attributes: formData },
+                { url: `${URLS.currency_edit}/${id}`, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -73,7 +67,7 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
             );
         }else {
             mutate(
-                { url: URLS.category_add, attributes: formData },
+                { url: URLS.currency_add, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -136,22 +130,6 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
                 form={form}
             >
                 <Form.Item
-                    label={t("Parent category")}
-                    name="parentCategoryId"
-                >
-                    <Select
-                        loading={isLoadingCategory}
-                        placeholder={t("Parent category")}
-                        options={get(categoryList,'data.content',[])?.map(item => {
-                            return {
-                                label: `${get(item,'name')} | ${get(item,'parentName')}`,
-                                value: get(item,'id')
-                            }
-                        })}
-                    />
-                </Form.Item>
-
-                <Form.Item
                     label={t("Name uz")}
                     name="uz"
                     rules={[{required: true,}]}
@@ -170,6 +148,14 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
                 <Form.Item
                     label={t("Name en")}
                     name="en"
+                    rules={[{required: true,}]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label={t("Currency code")}
+                    name="currencyCode"
                     rules={[{required: true,}]}
                 >
                     <Input />
@@ -203,4 +189,4 @@ const CreateEditCategory = ({id,setIsModalOpen}) => {
 };
 
 
-export default CreateEditCategory;
+export default CreateEditCurrency;

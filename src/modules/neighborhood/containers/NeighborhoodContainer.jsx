@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table} from "antd";
+import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
@@ -9,6 +9,7 @@ import {URLS} from "../../../constants/url.js";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import CreateEditNeighborhood from "../components/CreateEditNeighborhood.jsx";
+const { Title } = Typography;
 
 const NeighborhoodContainer = () => {
     const {t} = useTranslation();
@@ -123,10 +124,11 @@ const NeighborhoodContainer = () => {
             </Modal>
 
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
+                <Title level={4}>{t("Neighborhoods")}</Title>
                 <Space size={"middle"}>
                     <Input.Search
                         placeholder={t("Search")}
-                        onChange={(e) => setSearchKey(e.target.value)}
+                        onSearch={(value) => setSearchKey(value)}
                         allowClear
                     />
                     <Button

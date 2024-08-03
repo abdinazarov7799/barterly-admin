@@ -4,11 +4,12 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {useTranslation} from "react-i18next";
 import Container from "../../../components/Container.jsx";
-import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table} from "antd";
+import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import CreateEditRegion from "../components/CreateEditRegion.jsx";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
+const { Title } = Typography;
 
 const RegionContainer = () => {
     const {t} = useTranslation();
@@ -120,10 +121,11 @@ const RegionContainer = () => {
                 <CreateEditRegion id={itemId} setIsModalOpen={setIsEditModalOpen}/>
             </Modal>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
+                <Title level={4}>{t("Regions")}</Title>
                 <Space size={"middle"}>
                     <Input.Search
                         placeholder={t("Search")}
-                        onChange={(e) => setSearchKey(e.target.value)}
+                        onSearch={(value) => setSearchKey(value)}
                         allowClear
                     />
                     <Button

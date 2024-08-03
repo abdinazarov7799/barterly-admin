@@ -41,14 +41,15 @@ const CreateEditRegion = ({id,setIsModalOpen}) => {
         url: URLS.currency_list,
     })
 
+    const names = get(data,'data.names') && JSON.parse(get(data,'data.names'));
     useEffect(() => {
-        // form.setFieldsValue({
-        //     currencyId: get(itemData,'nameUz'),
-        //     uz: get(itemData,'translations.uz'),
-        //     ru: get(itemData,'translations.ru'),
-        //     en: get(itemData,'translations.en'),
-        // });
-        // setImgUrl(get(itemData,'imageUrl'));
+        form.setFieldsValue({
+            currencyId: get(data,'data.currencyId'),
+            uz: get(names,'uz'),
+            ru: get(names,'ru'),
+            en: get(names,'en'),
+        });
+        setImgUrl(get(data,'data.imageUrl'));
     }, [data]);
 
     const onFinish = (values) => {

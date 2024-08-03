@@ -6,54 +6,47 @@ import {URLS} from "../../../constants/url.js";
 import {Button, Form, Input, Select} from "antd";
 import {get} from "lodash";
 import usePutQuery from "../../../hooks/api/usePutQuery.js";
-import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 import useGetOneQuery from "../../../hooks/api/useGetOneQuery.js";
+import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 
 
-const CreateEditNeighborhood = ({id,setIsModalOpen}) => {
+const CreateEditCharacteristicsValue = ({id,setIsModalOpen}) => {
     const { t } = useTranslation();
     const [form] = Form.useForm();
 
     const {data} = useGetOneQuery({
         id,
-        key: KEYS.neighborhood_get_by_id,
-        url: URLS.neighborhood_get_by_id,
+        key: KEYS.characteristics_get_by_id,
+        url: URLS.characteristics_get_by_id,
         enabled: !!id
     })
 
     const { mutate, isLoading } = usePostQuery({
-        listKeyId: KEYS.neighborhood_list,
+        listKeyId: KEYS.characteristics_list,
     });
+
     const { mutate:mutateEdit, isLoading:isLoadingEdit } = usePutQuery({
-        listKeyId: KEYS.neighborhood_list,
+        listKeyId: KEYS.characteristics_list,
         hideSuccessToast: false
     });
 
-    const {data:regionList,isLoading:isLoadingRegion} = useGetAllQuery({
-        key: KEYS.region_list,
-        url: URLS.region_list,
+    const {data:characteristicsList,isLoading:isLoadingCharacteristics} = useGetAllQuery({
+        key: KEYS.characteristics_list,
+        url: URLS.characteristics_list,
     })
 
-    const {data:citiesList,isLoading:isLoadingCities} = useGetAllQuery({
-        key: KEYS.cities_list,
-        url: URLS.cities_list,
-    })
-
-    const names = get(data,'data.names') && JSON.parse(get(data,'data.names'));
     useEffect(() => {
         form.setFieldsValue({
-            regionId: get(data,'data.regionId'),
-            cityId: get(data,'data.cityId'),
-            uz: get(names,'uz'),
-            ru: get(names,'ru'),
-            en: get(names,'en'),
+            characteristicId: get(data,'data.categoryId'),
+            uz: get(data,'data.translations.uz'),
+            ru: get(data,'data.translations.ru'),
+            en: get(data,'data.translations.en'),
         });
     }, [data]);
 
     const onFinish = (values) => {
         const formData = {
-            regionId: get(values,'regionId'),
-            cityId: get(values,'cityId'),
+            characteristicId: get(values,'categoryId'),
             translations: {
                 uz: get(values,'uz'),
                 ru: get(values,'ru'),
@@ -62,7 +55,7 @@ const CreateEditNeighborhood = ({id,setIsModalOpen}) => {
         }
         if (id) {
             mutateEdit(
-                { url: `${URLS.neighborhood_edit}/${id}`, attributes: formData },
+                { url: `${URLS.characteristics_edit}/${id}`, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -71,7 +64,7 @@ const CreateEditNeighborhood = ({id,setIsModalOpen}) => {
             );
         }else {
             mutate(
-                { url: URLS.neighborhood_add, attributes: formData },
+                { url: URLS.characteristics_add, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -89,6 +82,23 @@ const CreateEditNeighborhood = ({id,setIsModalOpen}) => {
                 layout={"vertical"}
                 form={form}
             >
+                <Form.Item
+                    label={t("Characteristics")}
+                    name="characteristicId"
+                    rules={[{required: true,}]}
+                >
+                    <Select
+                        loading={isLoadingCharacteristics}
+                        placeholder={t("Characteristics")}
+                        options={get(characteristicsList,'data.content',[])?.map(item => {
+                            return {
+                                label: `${get(item,'name')} | ${get(item,'categoryName')}`,
+                                value: get(item,'id')
+                            }
+                        })}
+                    />
+                </Form.Item>
+
                 <Form.Item
                     label={t("Name uz")}
                     name="uz"
@@ -113,40 +123,6 @@ const CreateEditNeighborhood = ({id,setIsModalOpen}) => {
                     <Input />
                 </Form.Item>
 
-                <Form.Item
-                    label={t("Region")}
-                    name="regionId"
-                    rules={[{required: true,}]}
-                >
-                    <Select
-                        loading={isLoadingRegion}
-                        placeholder={t("Region")}
-                        options={get(regionList,'data.content',[])?.map(item => {
-                            return {
-                                label: `${get(item,'name')} | ${get(item,'currencyCode')}`,
-                                value: get(item,'id')
-                            }
-                        })}
-                    />
-                </Form.Item>
-
-                <Form.Item
-                    label={t("City")}
-                    name="cityId"
-                    rules={[{required: true,}]}
-                >
-                    <Select
-                        loading={isLoadingCities}
-                        placeholder={t("City")}
-                        options={get(citiesList,'data.content',[])?.map(item => {
-                            return {
-                                label: `${get(item,'name')} | ${get(item,'regionName')}`,
-                                value: get(item,'id')
-                            }
-                        })}
-                    />
-                </Form.Item>
-
                 <Form.Item>
                     <Button block type="primary" htmlType="submit" loading={isLoading || isLoadingEdit}>
                         {id ? t("Edit") : t("Create")}
@@ -158,4 +134,4 @@ const CreateEditNeighborhood = ({id,setIsModalOpen}) => {
 };
 
 
-export default CreateEditNeighborhood;
+export default CreateEditCharacteristicsValue;

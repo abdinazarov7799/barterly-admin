@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Input, Pagination, Row, Space, Table} from "antd";
+import {Input, Pagination, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
 import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
+const { Title } = Typography
 
 const RolesContainer = () => {
     const {t} = useTranslation();
@@ -44,10 +45,11 @@ const RolesContainer = () => {
     return (
         <Container>
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
+                <Title level={4}>{t("Roles")}</Title>
                 <Space size={"middle"}>
                     <Input.Search
                         placeholder={t("Search")}
-                        onChange={(e) => setSearchKey(e.target.value)}
+                        onSearch={(value) => setSearchKey(value)}
                         allowClear
                     />
                 </Space>

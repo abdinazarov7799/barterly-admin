@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table} from "antd";
+import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
@@ -9,6 +9,7 @@ import {URLS} from "../../../constants/url.js";
 import CreateEditCity from "../components/CreateEditCity.jsx";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
+const { Title } = Typography;
 
 const CitiesContainer = () => {
     const {t} = useTranslation();
@@ -18,6 +19,7 @@ const CitiesContainer = () => {
     const [itemId, setItemId] = useState(null);
     const [isCreateModalOpenCreate, setIsCreateModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+
     const {data,isLoading,isFetching} = usePaginateQuery({
         key: KEYS.cities_list,
         url: URLS.cities_list,
@@ -112,10 +114,11 @@ const CitiesContainer = () => {
             </Modal>
 
             <Space direction={"vertical"} style={{width: "100%"}} size={"middle"}>
+                <Title level={4}>{t("Cities")}</Title>
                 <Space size={"middle"}>
                     <Input.Search
                         placeholder={t("Search")}
-                        onChange={(e) => setSearchKey(e.target.value)}
+                        onSearch={(value) => setSearchKey(value)}
                         allowClear
                     />
                     <Button

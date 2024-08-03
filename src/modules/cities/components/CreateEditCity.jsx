@@ -34,14 +34,14 @@ const CreateEditCity = ({id,setIsModalOpen}) => {
         url: URLS.region_list,
     })
 
+    const names = get(data,'data.names') && JSON.parse(get(data,'data.names'));
     useEffect(() => {
-        // form.setFieldsValue({
-        //     currencyId: get(itemData,'nameUz'),
-        //     uz: get(itemData,'translations.uz'),
-        //     ru: get(itemData,'translations.ru'),
-        //     en: get(itemData,'translations.en'),
-        // });
-        // setImgUrl(get(itemData,'imageUrl'));
+        form.setFieldsValue({
+            regionId: get(data,'data.regionId'),
+            uz: get(names,'uz'),
+            ru: get(names,'ru'),
+            en: get(names,'en'),
+        });
     }, [data]);
 
     const onFinish = (values) => {
