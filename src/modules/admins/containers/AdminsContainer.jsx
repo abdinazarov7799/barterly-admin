@@ -13,7 +13,6 @@ const { Title } = Typography
 const AdminsContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(10);
     const [isModalOpen, setModalOpen] = useState(false);
     const [searchKey,setSearchKey] = useState();
     const {data,isLoading,isFetching} = usePaginateQuery({
@@ -21,7 +20,7 @@ const AdminsContainer = () => {
         url: URLS.admin_list,
         params: {
             params: {
-                size,
+                size: 10,
                 search: searchKey
             }
         },
@@ -43,11 +42,6 @@ const AdminsContainer = () => {
             title: t("Username"),
             dataIndex: "username",
             key: "username",
-        },
-        {
-            title: t("Email"),
-            dataIndex: "email",
-            key: "email",
         },
         {
             title: t("Role"),

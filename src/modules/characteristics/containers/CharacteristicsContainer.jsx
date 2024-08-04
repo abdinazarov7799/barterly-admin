@@ -4,19 +4,20 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {useTranslation} from "react-i18next";
 import Container from "../../../components/Container.jsx";
-import {Button, Checkbox, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
+import {Button, Checkbox, Input, Modal, Pagination, Popconfirm, Row, Select, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import CreateEditCharacteristics from "../components/CreateEditCharacteristics.jsx";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
+import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 const { Title } = Typography;
 
 const CharacteristicsContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(10);
-    const [searchKey,setSearchKey] = useState();
+    const [searchKey,setSearchKey] = useState(null);
     const [itemId, setItemId] = useState(null);
+    const [categoryId, setCategoryId] = useState(null);
     const [isCreateModalOpenCreate, setIsCreateModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
@@ -25,12 +26,18 @@ const CharacteristicsContainer = () => {
         url: URLS.characteristics_list,
         params: {
             params: {
-                size,
+                size: 10,
+                categoryId,
                 search: searchKey
             }
         },
         page
     });
+
+    const {data:categoryList,isLoading:isLoadingCategory} = useGetAllQuery({
+        key: KEYS.category_list,
+        url: URLS.category_list,
+    })
 
     const { mutate } = useDeleteQuery({
         listKeyId: KEYS.characteristics_list
@@ -70,7 +77,7 @@ const CharacteristicsContainer = () => {
             title: t("Required"),
             key: "required",
             dataIndex: "required",
-            render: (data) => <Checkbox value={data} disabled/>
+            render: (data) => <Checkbox checked={data} />
         },
         {
             title: t("Edit"),
@@ -126,6 +133,19 @@ const CharacteristicsContainer = () => {
                         placeholder={t("Search")}
                         onSearch={(value) => setSearchKey(value)}
                         allowClear
+                    />
+                    <Select
+                        loading={isLoadingCategory}
+                        allowClear
+                        placeholder={t("Category")}
+                        onChange={(value) => setCategoryId(value)}
+                        style={{ width: 200 }}
+                        options={get(categoryList,'data.content',[])?.map(item => {
+                            return {
+                                label: get(item,'name'),
+                                value: get(item,'id')
+                            }
+                        })}
                     />
                     <Button
                         type={"primary"}

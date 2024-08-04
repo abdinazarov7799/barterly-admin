@@ -4,18 +4,19 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {useTranslation} from "react-i18next";
 import Container from "../../../components/Container.jsx";
-import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
+import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Select, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import CreateEditRegion from "../components/CreateEditRegion.jsx";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
+import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 const { Title } = Typography;
 
 const RegionContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(10);
-    const [searchKey,setSearchKey] = useState();
+    const [searchKey,setSearchKey] = useState(null);
+    const [currencyId,setCurrencyId] = useState(null);
     const [itemId, setItemId] = useState(null);
     const [isCreateModalOpenCreate, setIsCreateModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
@@ -25,12 +26,18 @@ const RegionContainer = () => {
         url: URLS.region_list,
         params: {
             params: {
-                size,
+                size: 10,
+                currencyId,
                 search: searchKey
             }
         },
         page
     });
+
+    const {data:currencyList,isLoading:isLoadingCurrency} = useGetAllQuery({
+        key: KEYS.currency_list,
+        url: URLS.currency_list,
+    })
 
     const { mutate } = useDeleteQuery({
         listKeyId: KEYS.region_list
@@ -127,6 +134,19 @@ const RegionContainer = () => {
                         placeholder={t("Search")}
                         onSearch={(value) => setSearchKey(value)}
                         allowClear
+                    />
+                    <Select
+                        loading={isLoadingCurrency}
+                        allowClear
+                        placeholder={t("Currency")}
+                        onChange={(value) => setCurrencyId(value)}
+                        style={{ width: 200 }}
+                        options={get(currencyList,'data.content',[])?.map(item => {
+                            return {
+                                label: `${get(item,'name')} | ${get(item,'currencyCode')}`,
+                                value: get(item,'id')
+                            }
+                        })}
                     />
                     <Button
                         type={"primary"}

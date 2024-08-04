@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Container from "../../../components/Container.jsx";
-import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
+import {Button, Input, Modal, Pagination, Popconfirm, Row, Select, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {useTranslation} from "react-i18next";
 import usePaginateQuery from "../../../hooks/api/usePaginateQuery.js";
@@ -9,13 +9,15 @@ import {URLS} from "../../../constants/url.js";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import CreateEditNeighborhood from "../components/CreateEditNeighborhood.jsx";
+import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 const { Title } = Typography;
 
 const NeighborhoodContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(10);
-    const [searchKey,setSearchKey] = useState();
+    const [searchKey,setSearchKey] = useState(null);
+    const [regionId,setRegionId] = useState(null);
+    const [cityId,setCityId] = useState(null);
     const [itemId, setItemId] = useState(null);
     const [isCreateModalOpenCreate, setIsCreateModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
@@ -24,12 +26,24 @@ const NeighborhoodContainer = () => {
         url: URLS.neighborhood_list,
         params: {
             params: {
-                size,
+                size: 10,
+                regionId,
+                cityId,
                 search: searchKey
             }
         },
         page
     });
+
+    const {data:regionList,isLoading:isLoadingRegion} = useGetAllQuery({
+        key: KEYS.region_list,
+        url: URLS.region_list,
+    })
+
+    const {data:cityList,isLoading:isLoadingCity} = useGetAllQuery({
+        key: KEYS.cities_list,
+        url: URLS.cities_list,
+    })
 
     const { mutate } = useDeleteQuery({
         listKeyId: KEYS.neighborhood_list
@@ -130,6 +144,32 @@ const NeighborhoodContainer = () => {
                         placeholder={t("Search")}
                         onSearch={(value) => setSearchKey(value)}
                         allowClear
+                    />
+                    <Select
+                        loading={isLoadingRegion}
+                        allowClear
+                        placeholder={t("Region")}
+                        onChange={(value) => setRegionId(value)}
+                        style={{ width: 200 }}
+                        options={get(regionList,'data.content',[])?.map(item => {
+                            return {
+                                label: get(item,'name'),
+                                value: get(item,'id')
+                            }
+                        })}
+                    />
+                    <Select
+                        loading={isLoadingCity}
+                        allowClear
+                        placeholder={t("City")}
+                        onChange={(value) => setCityId(value)}
+                        style={{ width: 200 }}
+                        options={get(cityList,'data.content',[])?.map(item => {
+                            return {
+                                label: get(item,'name'),
+                                value: get(item,'id')
+                            }
+                        })}
                     />
                     <Button
                         type={"primary"}

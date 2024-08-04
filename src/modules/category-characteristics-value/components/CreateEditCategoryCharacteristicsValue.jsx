@@ -22,11 +22,11 @@ const CreateEditCategoryCharacteristicsValue = ({id,setIsModalOpen}) => {
     })
 
     const { mutate, isLoading } = usePostQuery({
-        listKeyId: KEYS.category_characteristics_list,
+        listKeyId: KEYS.category_characteristics_value_list,
     });
 
     const { mutate:mutateEdit, isLoading:isLoadingEdit } = usePutQuery({
-        listKeyId: KEYS.category_characteristics_list,
+        listKeyId: KEYS.category_characteristics_value_list,
         hideSuccessToast: false
     });
 
@@ -37,8 +37,7 @@ const CreateEditCategoryCharacteristicsValue = ({id,setIsModalOpen}) => {
 
     useEffect(() => {
         form.setFieldsValue({
-            parentId: get(data,'data.parentId'),
-            categoryId: get(data,'data.categoryId'),
+            categoryCharacteristicId: get(data,'data.categoryCharacteristicId'),
             uz: get(data,'data.translations.uz'),
             ru: get(data,'data.translations.ru'),
             en: get(data,'data.translations.en'),
@@ -47,8 +46,7 @@ const CreateEditCategoryCharacteristicsValue = ({id,setIsModalOpen}) => {
 
     const onFinish = (values) => {
         const formData = {
-            parentId: get(values,'parentId'),
-            categoryId: get(values,'categoryId'),
+            categoryCharacteristicId: get(values,'categoryCharacteristicId'),
             translations: {
                 uz: get(values,'uz'),
                 ru: get(values,'ru'),
@@ -57,7 +55,7 @@ const CreateEditCategoryCharacteristicsValue = ({id,setIsModalOpen}) => {
         }
         if (id) {
             mutateEdit(
-                { url: `${URLS.category_characteristics_edit}/${id}`, attributes: formData },
+                { url: `${URLS.category_characteristics_value_edit}/${id}`, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -66,7 +64,7 @@ const CreateEditCategoryCharacteristicsValue = ({id,setIsModalOpen}) => {
             );
         }else {
             mutate(
-                { url: URLS.category_characteristics_add, attributes: formData },
+                { url: URLS.category_characteristics_value_add, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -85,13 +83,13 @@ const CreateEditCategoryCharacteristicsValue = ({id,setIsModalOpen}) => {
                 form={form}
             >
                 <Form.Item
-                    label={t("Characteristics")}
-                    name="parentId"
+                    label={t("Category characteristics")}
+                    name="categoryCharacteristicId"
                     rules={[{required: true,}]}
                 >
                     <Select
                         loading={isLoadingCategoryCharacteristics}
-                        placeholder={t("Characteristics")}
+                        placeholder={t("Category characteristics")}
                         options={get(categoryCharacteristicsList,'data.content',[])?.map(item => {
                             return {
                                 label: `${get(item,'name')} | ${get(item,'parentCharacteristicName')} | ${get(item,'categoryName')}`,

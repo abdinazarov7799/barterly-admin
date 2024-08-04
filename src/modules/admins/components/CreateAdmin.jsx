@@ -36,14 +36,6 @@ const CreateAdmin = ({setIsModalOpen,refetch}) => {
                 layout={"vertical"}
             >
                 <Form.Item
-                    label={t("Email")}
-                    name="email"
-                    rules={[{required: true,}]}
-                >
-                    <Input type="email" />
-                </Form.Item>
-
-                <Form.Item
                     label={t("User name")}
                     name="username"
                     rules={[{required: true,}]}

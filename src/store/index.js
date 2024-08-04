@@ -14,7 +14,7 @@ let store = (set) => ({
 let settingsStore = (set) => ({
     token: null,
     refreshToken: null,
-    darkMode: storage.get('darkMode') || false,
+    darkMode: storage.get('darkMode') || true,
     lang: storage.get('lang') ||  config.DEFAULT_APP_LANG,
     setToken: (token) => set(state => ({...state, token})),
     setRefreshToken: (refreshToken) => set(state => ({...state, refreshToken})),

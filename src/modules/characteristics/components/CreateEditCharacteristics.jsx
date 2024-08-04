@@ -58,7 +58,7 @@ const CreateEditCharacteristics = ({id,setIsModalOpen}) => {
         }
         if (id) {
             mutateEdit(
-                { url: `${URLS.category_characteristics_edit}/${id}`, attributes: formData },
+                { url: `${URLS.characteristics_edit}/${id}`, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);
@@ -67,7 +67,7 @@ const CreateEditCharacteristics = ({id,setIsModalOpen}) => {
             );
         }else {
             mutate(
-                { url: URLS.category_characteristics_add, attributes: formData },
+                { url: URLS.characteristics_add, attributes: formData },
                 {
                     onSuccess: () => {
                         setIsModalOpen(false);

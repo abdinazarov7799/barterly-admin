@@ -4,19 +4,20 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {useTranslation} from "react-i18next";
 import Container from "../../../components/Container.jsx";
-import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
+import {Button, Image, Input, Modal, Pagination, Popconfirm, Row, Select, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 import CreateEditCategory from "../components/CreateEditCategory.jsx";
+import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 const { Title } = Typography;
 
 const CategoryContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(10);
-    const [searchKey,setSearchKey] = useState();
+    const [searchKey,setSearchKey] = useState(null);
     const [itemId, setItemId] = useState(null);
+    const [parentId, setParentId] = useState(null);
     const [isCreateModalOpenCreate, setIsCreateModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
@@ -25,12 +26,18 @@ const CategoryContainer = () => {
         url: URLS.category_list,
         params: {
             params: {
-                size,
+                size: 10,
+                parentId,
                 search: searchKey
             }
         },
         page
     });
+
+    const {data:categoryList,isLoading:isLoadingCategory} = useGetAllQuery({
+        key: KEYS.category_list,
+        url: URLS.category_list,
+    })
 
     const { mutate } = useDeleteQuery({
         listKeyId: KEYS.category_list
@@ -129,6 +136,19 @@ const CategoryContainer = () => {
                         placeholder={t("Search")}
                         onSearch={(value) => setSearchKey(value)}
                         allowClear
+                    />
+                    <Select
+                        loading={isLoadingCategory}
+                        allowClear
+                        placeholder={t("Parent category")}
+                        onChange={(value) => setParentId(value)}
+                        style={{ width: 200 }}
+                        options={get(categoryList,'data.content',[])?.map(item => {
+                            return {
+                                label: get(item,'name'),
+                                value: get(item,'id')
+                            }
+                        })}
                     />
                     <Button
                         type={"primary"}

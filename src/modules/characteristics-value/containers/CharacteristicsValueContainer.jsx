@@ -4,19 +4,20 @@ import {KEYS} from "../../../constants/key.js";
 import {URLS} from "../../../constants/url.js";
 import {useTranslation} from "react-i18next";
 import Container from "../../../components/Container.jsx";
-import {Button, Input, Modal, Pagination, Popconfirm, Row, Space, Table, Typography} from "antd";
+import {Button, Input, Modal, Pagination, Popconfirm, Row, Select, Space, Table, Typography} from "antd";
 import {get} from "lodash";
 import useDeleteQuery from "../../../hooks/api/useDeleteQuery.js";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import CreateEditCharacteristicsValue from "../components/CreateEditCharacteristicsValue.jsx";
+import useGetAllQuery from "../../../hooks/api/useGetAllQuery.js";
 const { Title } = Typography;
 
 const CharacteristicsValueContainer = () => {
     const {t} = useTranslation();
     const [page, setPage] = useState(0);
-    const [size, setSize] = useState(10);
-    const [searchKey,setSearchKey] = useState();
+    const [searchKey,setSearchKey] = useState(null);
     const [itemId, setItemId] = useState(null);
+    const [characteristicId, setCharacteristicId] = useState(null);
     const [isCreateModalOpenCreate, setIsCreateModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
@@ -25,12 +26,18 @@ const CharacteristicsValueContainer = () => {
         url: URLS.characteristic_value_list,
         params: {
             params: {
-                size,
+                size: 10,
+                characteristicId,
                 search: searchKey
             }
         },
         page
     });
+
+    const {data:characteristicsList,isLoading:isLoadingCharacteristics} = useGetAllQuery({
+        key: KEYS.characteristics_list,
+        url: URLS.characteristics_list,
+    })
 
     const { mutate } = useDeleteQuery({
         listKeyId: KEYS.characteristic_value_list
@@ -120,6 +127,19 @@ const CharacteristicsValueContainer = () => {
                         placeholder={t("Search")}
                         onSearch={(value) => setSearchKey(value)}
                         allowClear
+                    />
+                    <Select
+                        loading={isLoadingCharacteristics}
+                        allowClear
+                        placeholder={t("Characteristics")}
+                        onChange={(value) => setCharacteristicId(value)}
+                        style={{ width: 200 }}
+                        options={get(characteristicsList,'data.content',[])?.map(item => {
+                            return {
+                                label: get(item,'name'),
+                                value: get(item,'id')
+                            }
+                        })}
                     />
                     <Button
                         type={"primary"}

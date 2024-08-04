@@ -68,13 +68,9 @@ const LoginContainer = () => {
             autoComplete="off"
         >
           <Form.Item
-              label={t("Email")}
-              name="email"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
+              label={t("User name")}
+              name="username"
+              rules={[{required: true,}]}
           >
             <Input />
           </Form.Item>
@@ -82,11 +78,7 @@ const LoginContainer = () => {
           <Form.Item
               label={t("Password")}
               name="password"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
+              rules={[{required: true,}]}
           >
             <Input.Password />
           </Form.Item>
